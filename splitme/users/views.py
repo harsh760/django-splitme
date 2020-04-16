@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.db import connection
 from django.contrib.auth.models import User
+from django.db import OperationalError
+import django.db
+
 
 
 def register(request):
@@ -53,16 +56,17 @@ def dictfetchall(cursor):
     ]
     
 def search(request):
+    c_user = request.user
     if request.method == 'POST':
         if request.POST.get('search_now') != '':
             try:
                 cursor = connection.cursor()
                 search_name = request.POST['search_now']
                 cursor.execute(
-                    f"SELECT a.* , p.image from auth_user a, users_profile p where (a.id = p.user_id) and (a.first_name = '{search_name}' or a.last_name = '{search_name}' or a.username = '{search_name}')  and a.is_superuser = 0 ; ")
+                    f"SELECT a.* , p.image from auth_user a, users_profile p where (a.id = p.user_id) and (a.first_name = '{search_name}' or a.last_name = '{search_name}' or a.username = '{search_name}')  and a.is_superuser = 0 and NOT a.id = {c_user.id}; ")
                 
                 ans = dictfetchall(cursor)
-                print(ans)
+                # print(ans)
 
             finally:
                 cursor.close()
@@ -85,7 +89,10 @@ def addFriends(request, uid):
         cursor = connection.cursor()
         cursor.execute(
             f"INSERT INTO `friends`(`u_id1`, `u_id2`) VALUES ({c_user.id},{uid}); ")
-        
+
+    except OperationalError as e:
+        (error_code, msg) = e.args 
+        messages.info(request, msg)     
 
     finally:
         cursor.close()
