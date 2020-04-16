@@ -47,8 +47,8 @@ urlpatterns = [
          ),
          name='password_reset_complete'),
     path('', include('blog.urls')),
-    path(r'search/', user_views.search, name='search'),
-    path('friends/<int:uid>',user_views.addFriends, name = 'adding'),
+    path('search/', user_views.search, name='search'),
+    path('search/friends/<int:uid>',user_views.addFriends, name = 'adding'),
 ]
 
 

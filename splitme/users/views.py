@@ -97,7 +97,6 @@ def addFriends(request, uid):
     finally:
         cursor.close()
 
-    
-    return render(request, 'users/search.html')
+    return redirect('search')
 
 
