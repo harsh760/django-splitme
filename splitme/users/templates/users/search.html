@@ -9,16 +9,19 @@
         <h2><a class="article-title" href="#">{{ user.username}}</a></h2>
         <p class="article-content">{{ user.first_name }}</p>
     </div>
-
+    {% load index %}
     
+    {% if 0 == checkArray|index:forloop.counter0 %}
         <button type="submit" onclick="location.href='{% url 'adding' user.id %}'"  name="" class="btn btn-primary" >
             ADD
         </button>
-    
-
-
+    {% else %}
+        <p>Added !!!</p>
+    {% endif %}        
 
 </article>
 
 {% endfor %}
 {% endblock content %}
+
+
