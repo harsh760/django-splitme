@@ -81,7 +81,7 @@ def search(request):
                     try:
                         cursor = connection.cursor()
                         cursor.execute(
-                            f"SELECT * FROM `friends` WHERE u_id1 = {c_user.id} and u_id2 = {ans[i].get('id')} ")
+                            f"SELECT * FROM `friends` WHERE (u_id1 = {c_user.id} and u_id2 = {ans[i].get('id')}) OR (u_id1 = {ans[i].get('id')} and u_id2 = {c_user.id}) ")
 
                         emnemans = dictfetchall(cursor)
                         emnem.append(len(emnemans))
@@ -89,7 +89,6 @@ def search(request):
                         
                     finally:
                         cursor.close() 
-                print(emnem)
                 context = {
                             'user_search': ans,
                             'checkArray': emnem
@@ -106,6 +105,8 @@ def addFriends(request, uid):
         cursor = connection.cursor()
         cursor.execute(
             f"INSERT INTO `friends`(`u_id1`, `u_id2`) VALUES ({c_user.id},{uid}); ")
+        
+        messages.info(request, f'You have got a new friend!!')    
 
     except OperationalError as e:
         (error_code, msg) = e.args
@@ -114,5 +115,5 @@ def addFriends(request, uid):
     finally:
         cursor.close()
 
-    return redirect('search')
+    return render(request,'blog/home.html')
 
