@@ -1,4 +1,21 @@
 {% extends "blog/base.html" %}
 {% block content %}
-    <h1>Home</h1>
+<ul class="nav justify-content-center">
+    <li class="nav-item">
+      <a class="nav-link active" href="#">Active</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Link</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Link</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+    </li>
+  </ul>
+    
+
+    <button type="button" class="btn btn-dark position-sticky " data-toggle="modal" data-target="#staticBackdrop" onclick="location.href='{% url 'new-transaction' %}'" >Dark</button>
+
 {% endblock content %}
