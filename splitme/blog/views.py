@@ -50,7 +50,8 @@ def newTransaction(request):
         try:
             cursor = connection.cursor()
             cursor.execute(
-                f"SELECT * FROM auth_user where id in (SELECT u_id2 from friends where u_id1 = {c_user.id})")
+                f"select *from auth_user where (id in (select u_id2 from friends where u_id1 ={c_user.id})) or (id in (select u_id1 from friends where u_id2={c_user.id}))")
+                # f"SELECT * FROM auth_user where id in (SELECT u_id2 from friends where u_id1 = {c_user.id} or u_id2 = {c_user.id})")
             ans = dictfetchall(cursor)
         finally:
             cursor.close()
