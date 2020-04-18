@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from django.db import connection
 from django.contrib import messages
 
-
 def home(request):
     c_user = request.user
     context = {
@@ -31,15 +30,18 @@ def newTransaction(request):
         from_u = request.POST.get('paidby')
         to_u = request.POST.get('topay')
         amount = request.POST.get('amount')
-        # print(detail , date , payer , payee, amount)
-
+        
+        print(detail , date , from_u , to_u, amount)
+        finalA = float(amount)/2
+        detail = detail.replace("'" , "''")
+        print(detail , date , from_u , to_u, amount)
         try:
             cursor = connection.cursor()
             res = connection.cursor()
             cursor.execute(
                 f"INSERT INTO `transactions`(`user_id`, `t_name`, `t_posted`) VALUES ('{from_u}','{detail}','{date}')")
             res.execute(
-                f"INSERT INTO `transaction_u`(`u_id`, `amount`) VALUES ({to_u},{amount})"
+                f"INSERT INTO `transaction_u`(`u_id`, `amount`) VALUES ({to_u},{finalA})"
             )
         finally:
             cursor.close()
@@ -63,7 +65,15 @@ def newTransaction(request):
     return render(request, 'blog/home.html')
 
 
+def activityView(request):
+
+
+    return render(request , 'blog/activity.html')
+
+
+
 def about(request):
     return render(request, 'blog/about.html', {'title': 'About'})
 
     
+# select transactions.* , transaction_u.u_id , transaction_u.amount from transactions inner join transaction_u on transactions.t_id= transaction_u.t_id where (transactions.user_id='5' or transaction_u.u_id = '5') ORDER BY transactions.t_posted DESC

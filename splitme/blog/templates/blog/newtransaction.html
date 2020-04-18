@@ -8,46 +8,52 @@
         <textarea class="form-control" name="desc" id="description" rows="3" required="true"></textarea>
     </div>
 
-    <label for="amount">Amount</label>
-    <input type="text" name="amount" class="form-control" id="amount"required="true" placeholder="Amount">
-
-    <div class="form-group"> <!-- Date input -->
-        <label class="control-label" for="date">Date</label>    
-        <input class="form-control" id="date" name="date" required="true" placeholder="YYYY-MM-DD" type="text"/>
+    <div class="form-row">
+        <div class="col-auto">
+            <label for="amount">Amount</label>
+            <input type="number" name="amount" class="form-control" id="amount" required="true" placeholder="Amount">
+        </div>
+        <div class="col-auto">
+            <div class="form-group">
+                <!-- Date input -->
+                <label class="control-label" for="date">Date</label>
+                <input class="form-control" id="date" name="date" required="true" placeholder="YYYY-MM-DD"
+                    type="date" />
+            </div>
+        </div>
     </div>
-
     <div class="form-group">
         <label for="inputfrom">paid by</label>
         <select id="inputfrom" name="paidby" class="form-control" required="true">
-          <option value="{{user.id}}" selected>{{user.first_name}}</option>
-          {% for f in frnd %}
-                <option value="{{f.id}}">{{f.username}}  ({{f.first_name}})</option>
-          {% endfor %}
+            <option value="{{user.id}}" selected>{{user.first_name}}</option>
+            {% for f in frnd %}
+            <option value="{{f.id}}">{{f.username}} ({{f.first_name}})</option>
+            {% endfor %}
         </select>
-      </div>
+    </div>
 
-    
+
     <div class="form-group">
         <label for="inputto">to</label>
         <select id="inputto" name="topay" class="form-control" required="true">
-          <option selected>choose</option>
-          <option value="{{user.id}}">{{user.first_name}}</option>
-          {% for f in frnd %}
-                <option value="{{f.id}}">{{f.username}}  ({{f.first_name}})</option>
-          {% endfor %}
+            <option selected value="{{user.id}}">{{user.first_name}}</option>
+            {% for f in frnd %}
+            <option value="{{f.id}}">{{f.username}} ({{f.first_name}})</option>
+            {% endfor %}
         </select>
     </div>
-      
-      
-      <p>and split</p>
 
-      <div class="custom-control custom-switch">
+
+    <p>and split</p>
+
+    <div class="custom-control custom-switch">
         <input type="checkbox" class="custom-control-input" disabled id="customSwitch1">
         <label class="custom-control-label" for="customSwitch1">UnEqually</label>
-      </div>
+    </div>
 
-      <button type="submit" class="btn btn-primary">Add</button>
+    <button type="submit" class="btn btn-primary">Add</button>
 
 </form>
+
 
 {% endblock content %}

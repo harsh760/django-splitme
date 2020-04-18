@@ -2,20 +2,20 @@
 {% block content %}
 <ul class="nav justify-content-center">
     <li class="nav-item">
-      <a class="nav-link active" href="#">Active</a>
+      <a class="nav-link active" href="#">Friends</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#">Link</a>
+      <a class="nav-link" href="#">Groups</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#">Link</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+      <a class="nav-link" href="{% url 'activity' %}">Activity</a>
     </li>
   </ul>
-    
+  
+  <div class="btn-django">
+    <button type="button" class="btn btn-dark setter position-sticky " data-toggle="modal" data-target="#staticBackdrop" onclick="location.href='{% url 'new-transaction' %}'" >+</button>
+  </div>
 
-    <button type="button" class="btn btn-dark position-sticky " data-toggle="modal" data-target="#staticBackdrop" onclick="location.href='{% url 'new-transaction' %}'" >Dark</button>
+  {% block split %}{% endblock %}
 
 {% endblock content %}
