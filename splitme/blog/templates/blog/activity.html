@@ -1,13 +1,12 @@
 {% extends "blog/home.html" %}
 {% block split %}
-<table>
-    <tr>
-      <th>Month</th>
-      <th>Savings</th>
-    </tr>
-    <tr>
-      <td>January</td>
-      <td>$100</td>
-    </tr>
-  </table>
+
+ {% for ab in active %}
+<article class="media content-section">
+    <div class="media-body">
+        <h2><a class="article-title" href="#">{{ ab.message}}</a></h2>
+        <p class="article-content" > {{ab.at_time}}   </p>
+    </div>
+</article>
+{% endfor %}
 {% endblock %}

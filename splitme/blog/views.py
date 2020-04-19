@@ -120,7 +120,11 @@ def friendsView(request):
 
                     for row in res.fetchall():
                         # print(row[0])
-                        df1_data.append(row[0])
+                        # df1_data.append(row[0])
+                        if row[0] is None:
+                            df1_data.append('0')
+                        else:
+                            df1_data.append(row[0])
 
                     res.nextset()
                     for row in res.fetchall():
@@ -263,7 +267,22 @@ def deleteexpense(request , t_id):
     return render(request, 'blog/home.html')
 
 def activityView(request):
-    return render(request, 'blog/activity.html')
+    c_user = request.user
+    if request.method == 'GET':
+        try:
+            cursor = connection.cursor()
+            cursor.execute(
+                f"select activity.message,activity.at_time from activity where activity.userid={c_user.id} order by activity.a_id desc")
+            ans = dictfetchall(cursor)
+            print(ans)
+        finally:
+            cursor.close()    
+        
+        context={
+            'active': ans,
+        }
+           
+    return render(request, 'blog/activity.html',context)
 
 
 def about(request):

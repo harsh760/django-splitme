@@ -38,7 +38,6 @@
           <!-- Navbar Right Side -->
           <div class="navbar-nav">
             {% if user.is_authenticated %}
-            <a class="nav-item nav-link " href="#">New Post</a>
 
             <form class="form-inline my-2 my-lg-0" id="searchform" action="{% url 'search' %}" method="post">
               {% csrf_token %}
