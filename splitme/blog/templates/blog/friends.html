@@ -1,0 +1,31 @@
+{% extends "blog/home.html" %}
+
+{% block split %}
+<h1>F.R.I.E.N.D.S</h1>
+{% load index %}
+{% for f in frnd %}
+<article class="media content-section">
+    <img class="rounded-circle article-img" src="../../../media/{{ f.image }}">
+    <div class="media-body">
+
+        <h2><a class="article-title" href="#">{{ f.username}}</a></h2>
+        <p class="article-content">{{ f.first_name }}</p>
+    </div>
+    <h3 style="color:#4efc03;">{{levu|index:forloop.counter0}}</h3>
+    <h3><span>|</span></h3>
+    <h3 style="color:#ff5938;">{{devu|index:forloop.counter0}}</h3>
+    <h3><span>|</span></h3>
+    {% if total|index:forloop.counter0 > 0 %}
+    <h3 style="color:#008a05;">{{total|index:forloop.counter0}}</h3>
+    {% else %}
+    <h3 style="color:#b80000;">{{total|index:forloop.counter0}}</h3>
+    {% endif %}
+
+    <button type="submit"onclick="location.href='{% url 'friendsdata' f.id %}'" class="btn btn-primary">
+        SEE
+    </button>
+
+</article>
+
+{% endfor %}
+{% endblock %}

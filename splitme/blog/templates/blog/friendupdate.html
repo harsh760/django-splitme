@@ -1,7 +1,7 @@
 {% extends "blog/base.html" %}
 {% block content %}
 
-<form action="{% url 'new-transaction' %}" method="post" name="newForm" id="newForm">
+<form action="{% url 'friendsdataupdate' t_id %}" method="post" name="newForm" id="newForm">
     {% csrf_token %}
     <div class="form-group">
         <label for="description">Details</label>
