@@ -250,7 +250,17 @@ def updatefriend(request, t_id):
     return render(request, 'blog/home.html')    
 
   
+def deleteexpense(request , t_id):
+    try:
+        res = connection.cursor()
+        res.execute(
+           f"delete from transactions where transactions.t_id = {t_id};" )
 
+    finally:
+        res.close()
+        
+        messages.info(request, f'Expense deleted')
+    return render(request, 'blog/home.html')
 
 def activityView(request):
     return render(request, 'blog/activity.html')
