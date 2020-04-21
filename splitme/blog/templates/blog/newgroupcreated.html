@@ -5,21 +5,55 @@
 <form action="{% url 'addfriendsingroup' g_id  %}" method="POST">{% csrf_token %}
     <div class="form-group">
         {% for f in frnd %}
+        
         <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="{{f.id}}" value="{{f.id}}" name="checks[]">
             <label class="custom-control-label" for="{{f.id}}">{{f.username}} ({{f.first_name}})</label>
         </div>
         {% endfor %}
-        <!-- <label for="inputto">to</label>
-        <select id="inputto" name="topay" class="form-control" required="true">
-            {% for f in frnd %}
-            <option value="{{f.id}}"><a href="{% url 'addedfriends' %}">{{f.username}} ({{f.first_name}})</a></option>
-            {% endfor %}
-        </select> -->
         <button type="submit"class="btn btn-primary">
             ADD
         </button>
-
     </div>
 </form>
+
+
+<span><br></span>
+
+<div class="container">
+    <table id="grad" class="table table-borderless">
+        <thead>
+            <tr>
+                <th>Friends</th>
+            </tr>
+        </thead>
+
+        {% for ab in alldata%}
+        <tr>
+            <td>{{ab.first_name}} ({{ab.username}})</td>
+        <td><button type="submit"onclick="location.href='{% url 'removefriend' ab.id %}'" class="btn btn-primary">
+                Remove
+            </button></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<style>
+    #grad {
+        margin-top: 1rem;
+        border-radius: 25px;
+        background: #ffffff;
+        box-shadow: -31px -31px 42px #ffffff, 31px 31px 42px #d9d9d9;
+        color: black;
+    }
+
+
+    body {
+        background-color: #ffffff;
+        font-family: GrotekMed;
+    }
+</style>
+
+
 {% endblock split %}

@@ -14,5 +14,5 @@ urlpatterns = [
     path('showallgroups/' , views.showgroups , name = 'show-groups'),
     path('newgroup/' , views.addnewgroup , name = 'addgroup'),
     path('newgroup/addfriend/<int:g_id>', views.addfriendsingroup , name ='addfriendsingroup'),
-    path('newgroup/addedfriends', views.addedfriends , name ='addedfriends'),
+    path('newgroup/removefriends/<int:u_id>', views.removefriends , name ='removefriend'),
 ]

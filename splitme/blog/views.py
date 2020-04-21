@@ -97,7 +97,7 @@ def friendsView(request):
             cursor = connection.cursor()
             result = connection.cursor()
             cursor.execute(
-                f"select a.*, p.image from auth_user a , users_profile p where (a.id = p.user_id) and (a.id in (select u_id2 from friends where u_id1 = {c_user.id})) or (a.id in (select u_id1 from friends where u_id2={c_user.id}))")
+                f"select a.*, p.image from auth_user a inner join users_profile p on a.id = p.id where (a.id = p.user_id) and (a.id in (select u_id2 from friends where u_id1 = {c_user.id})) or (a.id in (select u_id1 from friends where u_id2= {c_user.id}))")
             ans = dictfetchall(cursor)
 
             print(len(ans))
@@ -308,8 +308,6 @@ def addnewgroup(request):
 
 def addfriendsingroup(request,g_id):
     c_user = request.user
-    print("hello")
-    print(g_id)
     some_var =[]
     if request.method == 'POST':
         some_var = request.POST.getlist('checks[]')
@@ -329,27 +327,41 @@ def addfriendsingroup(request,g_id):
         return redirect('friends')
         # return render(request, 'blog/newgroup.html')
     else:
-        print("you  are here")
         try:
             cursor = connection.cursor()
+            res = connection.cursor()            
             cursor.execute(
-                f"select *from auth_user where (id in (select u_id2 from friends where u_id1 ={c_user.id})) or (id in (select u_id1 from friends where u_id2={c_user.id}))")
+                f"call getgroupfriend({c_user.id} , {g_id})")
             ans = dictfetchall(cursor)
-            print(ans)
+
+            res.execute(
+                f"select * from auth_user a where id in (select g.id from group_data g where g.g_id = {g_id} and not g.id = {c_user.id})")
+            result = dictfetchall(res)
+            print(result)
         finally:
             cursor.close()
         context = {
             'user' : c_user,
             'frnd' : ans,
             'g_id' : g_id,
+            'alldata' : result
         }    
         return render(request, 'blog/newgroupcreated.html' ,context)
     return render(request, 'blog/home.html')
 
 
-def addedfriends(request):
+def removefriends(request,u_id):
+    try:
+        res = connection.cursor()
+        res.execute(
+           f"delete from group_data where id = {u_id};")
 
-    return redirect('addfriendsingroup')  
+    finally:
+        res.close()
+        
+        messages.info(request, f'User removed from group.!!')
+
+    return redirect('friends')  
 
 
 def showgroups(request):
