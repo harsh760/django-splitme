@@ -38,7 +38,7 @@
           <!-- Navbar Right Side -->
           <div class="navbar-nav">
             {% if user.is_authenticated %}
-
+            <a class="nav-item nav-link" href="{% url 'addgroup' %}">New Group</a>
             <form class="form-inline my-2 my-lg-0" id="searchform" action="{% url 'search' %}" method="post">
               {% csrf_token %}
               <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search_now"

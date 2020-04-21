@@ -1,0 +1,8 @@
+{% extends "blog/base.html" %}
+{% block content %}
+{% load crispy_forms_tags %}
+<form action="{% url 'addgroup' %}" method="POST">{% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-primary">Create Group</button>
+</form>
+{% endblock content %}

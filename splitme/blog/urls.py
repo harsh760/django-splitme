@@ -10,6 +10,9 @@ urlpatterns = [
     path('' , views.friendsView , name = 'friends'),
     path('home/friends/<int:f_id>' , views.gettransdatafriend , name = 'friendsdata'),
     path('home/friends/update/<int:t_id>' , views.updatefriend , name = 'friendsdataupdate'),
-    path('home/friends/delete/<int:t_id>' , views.deleteexpense , name = ''),
-    
+    path('home/friends/delete/<int:t_id>' , views.deleteexpense , name = 'deleteexpense'),
+    path('showallgroups/' , views.showgroups , name = 'show-groups'),
+    path('newgroup/' , views.addnewgroup , name = 'addgroup'),
+    path('newgroup/addfriend/<int:g_id>', views.addfriendsingroup , name ='addfriendsingroup'),
+    path('newgroup/addedfriends', views.addedfriends , name ='addedfriends'),
 ]

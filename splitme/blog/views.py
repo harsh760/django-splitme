@@ -5,7 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.db import connection
 from django.contrib import messages
 from collections import namedtuple
-
+from .forms import MyForm 
+ 
 
 def home(request):
     c_user = request.user
@@ -29,8 +30,6 @@ def namedtuplefetchall(cursor):
     desc = cursor.description
     nt_result = namedtuple('Result', [col[0] for col in desc])
     return [nt_result(*row) for row in cursor.fetchall()]
-
-
 
 
 @login_required
@@ -103,13 +102,6 @@ def friendsView(request):
 
             print(len(ans))
 
-            # result.execute(
-            #     f"Call get_tdata({c_user.id}, {ans[m].get('id')});")
-
-            # resfrnd = dictfetchall(result)
-
-            # print(resfrnd)
-            # restransfrnd = dict()
             df1_data = []
             df2_data = []
             for i in range(len(ans)):
@@ -137,8 +129,6 @@ def friendsView(request):
                 finally:
                     res.close()
 
-            # print(idk)
-                # for j in range(3):
             tot = []
             for i in range(0, len(df1_data)):
                 df1_data[i] = int(df1_data[i])
@@ -289,61 +279,104 @@ def about(request):
     return render(request, 'blog/about.html', {'title': 'About'})
 
 
-# select transactions.* , transaction_u.u_id , transaction_u.amount from transactions inner join transaction_u on transactions.t_id= transaction_u.t_id where (transactions.user_id='5' or transaction_u.u_id = '5') ORDER BY transactions.t_posted DESC
-    #  AYA thi jovanu
-    # column_names = [col[0] for col in res.description]
+def addnewgroup(request):
+    c_user = request.user
+    form = MyForm()
+    if request.method=='POST':
+        form = MyForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            #now in the object cd, you have the form as a dictionary.
+            name = cd.get('name')
+            bio = cd.get('bio')
+            
+            print
 
-    # for row in res.fetchall():
-    #     df1_data.append({name: row[k] for k, name in enumerate(column_names)})
+            name = str(name)
+            bio = str(bio)
 
-    # res.nextset()
-    # column_names = [col[0] for col in res.description] # Get column names from MySQL
+            try:
+                cursor = connection.cursor()
+                cursor.execute(
+                    f"INSERT INTO groups VALUES (Null,'{name}','{bio}',{c_user.id});"
+                )
+            finally:
+                cursor.close()    
+        return redirect('friends')
+    else:
+        return render(request, 'blog/newgroup.html' , {'form' : form})  
 
-    # for row in res.fetchall():
-    #     df2_data.append({name: row[j] for j, name in enumerate(column_names)})
+def addfriendsingroup(request,g_id):
+    c_user = request.user
+    print("hello")
+    print(g_id)
+    some_var =[]
+    if request.method == 'POST':
+        some_var = request.POST.getlist('checks[]')
+        
+        for i in range(0, len(some_var)): 
+            some_var[i] = int(some_var[i]) 
+
+        print(some_var)
+        try:
+            cursor = connection.cursor()
+            for i in range(len(some_var)):
+                cursor.execute(
+                    f"INSERT INTO `group_data`(`g_id`, `id`) VALUES ({g_id},{some_var[i]})"
+                )
+        finally:
+                cursor.close()    
+        return redirect('friends')
+        # return render(request, 'blog/newgroup.html')
+    else:
+        print("you  are here")
+        try:
+            cursor = connection.cursor()
+            cursor.execute(
+                f"select *from auth_user where (id in (select u_id2 from friends where u_id1 ={c_user.id})) or (id in (select u_id1 from friends where u_id2={c_user.id}))")
+            ans = dictfetchall(cursor)
+            print(ans)
+        finally:
+            cursor.close()
+        context = {
+            'user' : c_user,
+            'frnd' : ans,
+            'g_id' : g_id,
+        }    
+        return render(request, 'blog/newgroupcreated.html' ,context)
+    return render(request, 'blog/home.html')
+
+
+def addedfriends(request):
+
+    return redirect('addfriendsingroup')  
+
+
+def showgroups(request):
+    c_user = request.user
+
+    if request.method == 'GET':
+        try:
+            cursor = connection.cursor()
+            result = connection.cursor()
+            cursor.execute(
+                f"call getgroups({c_user.id})")
+            ans = dictfetchall(cursor)
+
+            print(ans)
+
+            context ={
+                'grup':ans,
+            }
+
+        finally:
+            cursor.close()
+
+        # messages.info(request, f'Added')
+
+    return render(request, 'blog/groups.html', context)
 
 
 
-# @login_required
-# def newTransaction(request):
-#     c_user = request.user
 
-#     if request.method == 'POST':
-#         detail = request.POST.get('desc')
-#         date = request.POST.get('date')
-#         from_u = request.POST.get('paidby')
-#         to_u = request.POST.get('topay')
-#         amount = request.POST.get('amount')
-
-#         print(detail, date, from_u, to_u, amount)
-#         finalA = float(amount)/2
-#         detail = detail.replace("'", "''")
-#         print(detail, date, from_u, to_u, amount)
-#         try:
-#             cursor = connection.cursor()
-#             res = connection.cursor()
-#             cursor.execute(
-#                 f"INSERT INTO `transactions`(`user_id`, `t_name`, `t_posted`) VALUES ('{from_u}','{detail}','{date}')")
-#             res.execute(
-#                 f"INSERT INTO `transaction_u`(`u_id`, `amount`) VALUES ({to_u},{finalA})"
-#             )
-#         finally:
-#             cursor.close()
-#             res.close()
-
-#         messages.info(request, f'Added')
-#     else:
-#         try:
-#             cursor = connection.cursor()
-#             cursor.execute(
-#                 f"select *from auth_user where (id in (select u_id2 from friends where u_id1 ={c_user.id})) or (id in (select u_id1 from friends where u_id2={c_user.id}))")
-#             # f"SELECT * FROM auth_user where id in (SELECT u_id2 from friends where u_id1 = {c_user.id} or u_id2 = {c_user.id})")
-#             ans = dictfetchall(cursor)
-#         finally:
-#             cursor.close()
-#         context = {
-#             'user': c_user,
-#             'frnd': ans,
-#         }
-#         return render(request, 'blog/newtransaction.html', context)
-#     return render(request, 'blog/home.html')
+# onclick="location.href='{% url 'addfriendsingroup'  %}'"
