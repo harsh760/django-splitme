@@ -1,7 +1,7 @@
 {% extends "blog/base.html" %}
 {% block content %}
 
-<form action="{% url 'new-transaction' %}" method="post" name="newForm" id="newForm">
+<form action="{% url 'newgrouptransaction' g_id %}" method="post" name="newForm" id="newForm">
     {% csrf_token %}
     <div class="form-group">
         <label for="description">Details</label>
@@ -25,29 +25,36 @@
     <div class="form-group">
         <label for="inputfrom">paid by</label>
         <select id="inputfrom" name="paidby" class="form-control" required="true">
-            <option value="{{user.id}}" selected>{{user.first_name}}</option>
+            <option value="{{user.id}}" selected>choose..</option>
             {% for f in frnd %}
             <option value="{{f.id}}">{{f.username}} ({{f.first_name}})</option>
             {% endfor %}
         </select>
     </div>
 
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
+        aria-expanded="false" aria-controls="collapseExample">
+        select to pay
+    </button>
 
-    <div class="form-group">
-        <label for="inputto">to</label>
-        <select id="inputto" name="topay" class="form-control" required="true">
-            <option selected value="{{user.id}}">{{user.first_name}}</option>
-            {% for f in frnd %}
-            <option value="{{f.id}}">{{f.username}} ({{f.first_name}})</option>
-            {% endfor %}
-        </select>
+    <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+            <div class="form-group" aria-required="true">
+                {% for f in frnd %}
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="{{f.id}}" value="{{f.id}}" name="checks[]">
+                    <label class="custom-control-label" for="{{f.id}}">{{f.username}} ({{f.first_name}})</label>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
     </div>
-
 
     <p>and split</p>
 
     <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" data-toggle="modal" data-target="#staticBackdrop"
+        <input type="checkbox" class="custom-control-input" disabled=True data-toggle="modal" data-target="#staticBackdrop"
             id="customSwitch1">
         <label class="custom-control-label" for="customSwitch1">UnEqually</label>
     </div>
@@ -82,7 +89,6 @@
             </div>
         </div>
     </div>
-
 
     <button type="submit" class="btn btn-primary">Add</button>
 

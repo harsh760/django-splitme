@@ -1,0 +1,55 @@
+{% extends "blog/home.html" %}
+
+{% block split %}
+
+<div class="container">
+    <table id="grad" class="table table-borderless">
+        <thead>
+            <tr>
+                <th>payer</th>
+                <th>payee</th>
+                <th>amount</th>
+                <th>on date</th>
+                <th>for</th>
+            </tr>
+        </thead>
+
+        {% for ab in alldata%}
+        <tr>
+            <td>{{ab.user_id}}</td>
+            <td>{{ab.u_id}}</td>
+            <td>{{ab.amount}}</td>
+            <td>{{ab.t_posted}}</td>
+            <td>{{ab.t_name}}</td>
+            <td><button type="submit"onclick="location.href='{% url 'deleteexpense' ab.t_id %}'" class="btn btn-primary">
+                Delete
+            </button></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<style>
+    #grad {
+        margin-top: 1rem;
+        border-radius: 25px;
+        background: #ffffff;
+        /* background: #535353; */
+        box-shadow: -31px -31px 42px #ffffff, 31px 31px 42px #d9d9d9;
+        /* box-shadow: -31px -31px 42px #3b3b3b, 31px 31px 42px #6b6b6b; */
+        /* background: #EFEEEE;
+    border-radius: 25px;
+    box-shadow: -3px -3px 15px #F4F2F1 , 3px 3px 20px #E7E4E0; */
+        color: black;
+    }
+
+
+    body {
+        /* background-color: #dde1e7; */
+        background-color: #ffffff;
+        /* background-color: #535353; */
+        font-family: GrotekMed;
+    }
+</style>
+
+{% endblock %}

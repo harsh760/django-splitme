@@ -64,9 +64,12 @@ def newTransaction(request):
             cursor = connection.cursor()
             res = connection.cursor()
             cursor.execute(
-                f"INSERT INTO `transactions`(`user_id`, `t_name`, `t_posted`) VALUES ('{from_u}','{detail}','{date}')")
+                f"call addexpense({from_u} ,'{detail}','{date}')")
+            rid = dictfetchall(cursor)    
+            rid = rid[0]["rid"]
+            
             res.execute(
-                f"INSERT INTO `transaction_u`(`u_id`, `amount`) VALUES ({to_u},{finalA})")
+                f"INSERT INTO `transaction_u` VALUES ({rid},{to_u},{finalA})")
         finally:
             cursor.close()
             res.close()
@@ -388,7 +391,91 @@ def showgroups(request):
 
     return render(request, 'blog/groups.html', context)
 
+def newgroupTransaction(request,g_id):
+    c_user = request.user
 
+    if request.method == 'POST':
+        detail = request.POST.get('desc')
+        date = request.POST.get('date')
+        from_u = request.POST.get('paidby')
+        amount = request.POST.get('amount')
+        some_var = request.POST.getlist('checks[]')
+        poffriend1 = request.POST.get('friend1')
+        poffriend2 = request.POST.get('friend2')
+            
+        sum1 = poffriend1 + poffriend2    
+        
+        if (poffriend1 != None and poffriend2 != None  ):
+            if (sum1 == 100):        
+               splitamount = (float(amount)*float(poffriend1))/100
+               netamount= float(amount) - splitamount
+               finalA = netamount
+            else:
+               finalA = float(amount)/(len(some_var)+1)    
+        else:
+            finalA = float(amount)/(len(some_var)+1)
 
+        print(detail , date , from_u , amount, finalA)    
+        
+        for i in range(0, len(some_var)): 
+            some_var[i] = int(some_var[i]) 
 
-# onclick="location.href='{% url 'addfriendsingroup'  %}'"
+        print(some_var)
+
+        detail = detail.replace("'" , "''")
+        
+        try:
+            cursor = connection.cursor()
+            res = connection.cursor()
+            cur = connection.cursor()
+            cursor.execute(
+                f"call addgroupexpense({from_u} ,'{detail}','{date}',{g_id})")
+            rid = dictfetchall(cursor)    
+            rid = rid[0]["rid"]
+            print(rid)
+                # f"INSERT INTO `transactions`(`user_id`, `t_name`, `t_posted`) VALUES ('{from_u}','{detail}','{date}')")
+            for i in some_var:
+                res.execute(
+                    f"INSERT INTO `transaction_u` VALUES ({rid} ,{i},{finalA})")
+              
+        finally:
+            cursor.close()
+            res.close()
+
+        messages.info(request, f'Added')
+    else:
+        try:
+            cursor = connection.cursor()
+            cursor.execute(
+                f"select a.* from auth_user a inner JOIN group_data g on a.id = g.id where g.g_id ={g_id}")
+            ans = dictfetchall(cursor)
+        finally:
+            cursor.close()
+        context = {
+            'g_id' : g_id,
+            'user' : c_user,
+            'frnd' : ans,
+        }    
+        return render(request, 'blog/newgtransaction.html' ,context)
+    return redirect('friends')
+
+def gettransdatagroup(request , g_id):
+    c_user = request.user.id
+    try:
+        cursor = connection.cursor()
+        cursor.execute(
+            f"call getgroupexpense({g_id});")
+
+        resultant = dictfetchall(cursor)
+
+        # print(resultant)
+
+    finally:
+        cursor.close()
+
+    context = {
+        'c_user': c_user,
+        'alldata': resultant,
+    }
+
+    return render(request, 'blog/seetransaction.html', context)

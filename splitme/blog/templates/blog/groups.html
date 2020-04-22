@@ -9,6 +9,12 @@
         <p class="article-content">{{ g.g_bio}}</p>
     </div>
     <button type="submit" onclick="location.href='{% url 'addfriendsingroup' g.g_id %}'" class="btn btn-primary">
+        EDIT
+    </button>
+    <button type="submit" onclick="location.href='{% url 'newgrouptransaction' g.g_id %}'" class="btn btn-primary">
+        ADD
+    </button>
+    <button type="submit" onclick="location.href='{% url 'groupsdata' g.g_id %}'" class="btn btn-primary">
         SEE
     </button>
 

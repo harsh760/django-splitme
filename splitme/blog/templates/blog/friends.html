@@ -2,6 +2,11 @@
 
 {% block split %}
 <h1>F.R.I.E.N.D.S</h1>
+  
+<div class="btn-django">
+    <button type="button" class="btn btn-dark setter position-sticky " data-toggle="modal" data-target="#staticBackdrop" onclick="location.href='{% url 'new-transaction' %}'" >+</button>
+  </div>
+
 {% load index %}
 {% for f in frnd %}
 <article class="media content-section">

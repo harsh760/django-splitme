@@ -11,10 +11,6 @@
       <a class="nav-link act" href="{% url 'activity' %}">Activity</a>
     </li>
   </ul>
-  
-  <div class="btn-django">
-    <button type="button" class="btn btn-dark setter position-sticky " data-toggle="modal" data-target="#staticBackdrop" onclick="location.href='{% url 'new-transaction' %}'" >+</button>
-  </div>
 
   {% block split %}{% endblock %}
 
