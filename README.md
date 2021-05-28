@@ -1,2 +1,2 @@
 # django-splitme
- replica of splitwise
+ replica of splitwise ( It's wise). 
